@@ -2,6 +2,7 @@ import CSS from 'csstype'
 import {CSSProperties, ReactNode} from 'react'
 import {TimeZone} from './timeZones'
 import {GeoLayerConfig} from './geo'
+import {Geo3DLayerConfig} from './geo3D'
 
 export interface PlotDimensions {
   height: number
@@ -255,6 +256,7 @@ export enum LayerTypes {
   Mosaic = 'mosaic',
   Table = 'table',
   Geo = 'geo',
+  Geo3D = 'geo3D',
   SimpleTable = 'simple table',
 }
 
@@ -272,6 +274,7 @@ export type LayerConfig =
   | MosaicLayerConfig
   | TableGraphLayerConfig
   | GeoLayerConfig
+  | Geo3DLayerConfig
   | SimpleTableLayerConfig
 
 export interface CustomLayerConfig {

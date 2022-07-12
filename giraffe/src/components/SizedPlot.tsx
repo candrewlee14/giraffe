@@ -29,6 +29,7 @@ import {ScatterLayer} from './ScatterLayer'
 import {RectLayer} from './RectLayer'
 import {MosaicLayer} from './MosaicLayer'
 import GeoLayer from './GeoLayer'
+import Geo3DLayer from './Geo3DLayer'
 
 import {Brush} from './Brush'
 import {rangeToDomain} from '../utils/brush'
@@ -39,6 +40,7 @@ import {useForceUpdate} from '../utils/useForceUpdate'
 import {LatestValueTransform} from './LatestValueTransform'
 import {newTableFromConfig} from '../utils/newTable'
 import {GeoLayerConfig} from '../types/geo'
+import {Geo3DLayerConfig} from '../types/geo3D'
 import {nearestTimestamp} from '../utils/nearestTimestamp'
 
 export interface SizedPlotProps {
@@ -225,6 +227,17 @@ export const SizedPlot: FunctionComponent<SizedPlotProps> = ({
                   key={layerIndex}
                   table={newTableFromConfig(config)}
                   config={layerConfig as GeoLayerConfig}
+                  plotConfig={config}
+                />
+              )
+            }
+
+            if (layerConfig.type === LayerTypes.Geo3D) {
+              return (
+                <Geo3DLayer
+                  key={layerIndex}
+                  table={newTableFromConfig(config)}
+                  config={layerConfig as Geo3DLayerConfig}
                   plotConfig={config}
                 />
               )

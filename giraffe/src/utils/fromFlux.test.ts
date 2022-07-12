@@ -400,7 +400,7 @@ describe('fromFlux', () => {
         type: 'number',
       },
       '_value (string)': {
-        data: [, , , ,'green', ,],
+        data: [, , , , 'green', ,],
         fluxDataType: 'string',
         name: '_value',
         type: 'string',
@@ -485,7 +485,14 @@ describe('fromFlux', () => {
         type: 'number',
       },
       title: {
-        data: [, , , ,'M 5.4 - 44 km W of Hengchun, Taiwan', 'M 4.6 - 107 km NNW of Te Anau, New Zealand'],
+        data: [
+          ,
+          ,
+          ,
+          ,
+          'M 5.4 - 44 km W of Hengchun, Taiwan',
+          'M 4.6 - 107 km NNW of Te Anau, New Zealand',
+        ],
         fluxDataType: 'string',
         name: 'title',
         type: 'string',
@@ -1290,7 +1297,7 @@ describe('fastFromFlux', () => {
         type: 'number',
       },
       '_value (string)': {
-        data: [, , , ,'green', ,],
+        data: [, , , , 'green', ,],
         fluxDataType: 'string',
         name: '_value',
         type: 'string',
@@ -1375,7 +1382,14 @@ describe('fastFromFlux', () => {
         type: 'number',
       },
       title: {
-        data: [, , , ,'M 5.4 - 44 km W of Hengchun, Taiwan', 'M 4.6 - 107 km NNW of Te Anau, New Zealand'],
+        data: [
+          ,
+          ,
+          ,
+          ,
+          'M 5.4 - 44 km W of Hengchun, Taiwan',
+          'M 4.6 - 107 km NNW of Te Anau, New Zealand',
+        ],
         fluxDataType: 'string',
         name: 'title',
         type: 'string',
