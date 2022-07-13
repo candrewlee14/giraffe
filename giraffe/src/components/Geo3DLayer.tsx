@@ -102,6 +102,7 @@ const onAutoResize = (
     allowPanAndZoom,
     detectCoordinateFields,
     mapStyle,
+    colors,
   } = config
   const {
     latOnLastRender,
@@ -128,6 +129,7 @@ const onAutoResize = (
         lat={lat}
         lon={lon}
         zoom={zoom}
+        colors={colors}
         mapStyle={mapStyle}
         detectCoordinateFields={detectCoordinateFields}
         layers={layers}

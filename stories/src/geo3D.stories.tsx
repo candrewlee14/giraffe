@@ -16,6 +16,7 @@ import {
   lattitudeKnob,
   longitudeKnob,
   s2GeoHashKnob,
+  colorSchemeKnob,
 } from './helpers'
 import {geoTable, geoTracks} from './data/geoLayer'
 import {ClusterAggregation} from '../../giraffe/src/types/geo'
@@ -121,6 +122,7 @@ geo3D.add('Tracks', () => {
     layers: [
       {
         type: 'geo3D',
+        colors: colorSchemeKnob(),
         lat: latitude,
         lon: longitude,
         zoom,

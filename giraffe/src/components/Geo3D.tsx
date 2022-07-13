@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useState,
   useRef,
-  createRef,
 } from 'react'
 import {GlobeMethods} from 'react-globe.gl'
 import Globe from 'react-globe.gl'
@@ -12,16 +11,15 @@ import Globe from 'react-globe.gl'
 // import Control from 'react-leaflet-control'
 
 // Components
-import {LayerSwitcher} from './geo/LayerSwitcher'
 
 // Utils
 import {preprocessData} from './geo/processing/tableProcessing'
-import {ZOOM_FRACTION, getMinZoom, getRowLimit} from '../utils/geo'
+import {getRowLimit} from '../utils/geo'
 
 // Types
 import {Geo3DLayerConfig} from '../types/geo3D'
 import {Config, Table} from '../types'
-import {map} from 'd3-array'
+import { Track } from './geo/processing/GeoTable'
 
 interface Props extends Partial<Geo3DLayerConfig> {
   width: number
@@ -43,8 +41,9 @@ const Geo3D: FunctionComponent<Props> = props => {
     useS2CellID,
     width,
     zoom,
+    colors,
   } = props
-  const globeRef = React.useRef<GlobeMethods>()
+  const globeRef = useRef<GlobeMethods>()
 
   const {table, detectCoordinateFields} = props
   const [preprocessedTable, setPreprocessedTable] = useState(
@@ -72,12 +71,12 @@ const Geo3D: FunctionComponent<Props> = props => {
 
   useEffect(() => {
     if (globeRef.current != null) {
-      ;(globeRef.current.controls() as Obj3).autoRotate = true
-      ;(globeRef.current.controls() as Obj3).autoRotateSpeed = 1.6
+      (globeRef.current.controls() as Obj3).autoRotate = true;
+      (globeRef.current.controls() as Obj3).autoRotateSpeed = 1.6;
       const latLon = preprocessedTable.getLatLon(0)
       if (latLon != null) {
         globeRef.current.pointOfView(
-          {lat: latLon?.lat, lng: latLon?.lon, altitude: 0.1},
+          {lat: latLon.lat, lng: latLon.lon, altitude: 0.1},
           500
         )
       }
@@ -100,8 +99,17 @@ const Geo3D: FunctionComponent<Props> = props => {
     }
   }
 
-  const tracks = preprocessedTable.mapTracks((track, _options, _index) => {
-    return track
+  interface Path {
+    pathIndex: number
+    track: Track
+  }
+
+  const tracks = preprocessedTable.mapTracks((track, _options, index) => {
+    const path : Path = {
+      track: track,
+      pathIndex: index,
+    }
+    return path
   }, null)
 
   return (
@@ -112,11 +120,16 @@ const Geo3D: FunctionComponent<Props> = props => {
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
       backgroundColor="rgba(0,0,0,0)"
       pathsData={tracks}
-      pathColor={() => ['rgba(0,0,255,0.6)', 'rgba(255,0,0,0.6)']}
+      pathPoints={path => (path as Path).track}
+      // pathPointLat={pt => pt.lat}
+      // pathPointLng={pt => pt.lng}
+      pathColor={path =>
+        colors ? colors[((path.pathIndex % colors.length) + colors.length) % colors.length] : ['rgba(0,0,255,0.6)', 'rgba(255,0,0,0.6)']
+      }
       pathStroke={3}
       pathDashLength={0.01}
       pathDashGap={0.004}
-      pathDashAnimateTime={100000}
+      pathDashAnimateTime={30_000}
       // pathPointAlt={rise ? pnt => pnt[2] : undefined}
       pathTransitionDuration={500}
     />

@@ -8,6 +8,7 @@ export interface Geo3DLayerConfig {
   detectCoordinateFields: boolean
   useS2CellID?: boolean
   s2Column?: string
+  colors?: string[]
   latLonColumns?: LatLonColumns
 
   onViewportChange?: (lat: number, lon: number, zoom: number) => void
