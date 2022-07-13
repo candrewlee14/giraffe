@@ -116,7 +116,7 @@ geo3D.add('Tracks', () => {
     endStopMarkerRadius,
   } = trackKnobs()
   const config: Config = {
-    table: geoTracks(-74, 40, numberOfTracks),
+    table: geoTracks(-74, 40, 100, numberOfTracks),
     showAxes: false,
     layers: [
       {

@@ -381,7 +381,7 @@ geo.add('Tracks', () => {
     endStopMarkerRadius,
   } = trackKnobs()
   const config: Config = {
-    table: geoTracks(-74, 40, numberOfTracks),
+    table: geoTracks(-74, 40, 10, numberOfTracks),
     showAxes: false,
     layers: [
       {
@@ -481,7 +481,7 @@ geo.add('Layering visualizations', () => {
     endStopMarkerRadius,
   } = trackKnobs()
   const config: Config = {
-    table: geoTracks(-74, 40),
+    table: geoTracks(-74, 40, 10, 1),
     showAxes: false,
     layers: [
       {

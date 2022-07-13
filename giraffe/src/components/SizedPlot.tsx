@@ -233,6 +233,7 @@ export const SizedPlot: FunctionComponent<SizedPlotProps> = ({
             }
 
             if (layerConfig.type === LayerTypes.Geo3D) {
+              config.brushHide = true
               return (
                 <Geo3DLayer
                   key={layerIndex}
@@ -364,14 +365,16 @@ export const SizedPlot: FunctionComponent<SizedPlotProps> = ({
           })}
           {children && children}
         </div>
-        <Brush
-          event={dragEvent}
-          width={env.innerWidth}
-          height={env.innerHeight}
-          onXBrushEnd={handleXBrushEnd}
-          onYBrushEnd={handleYBrushEnd}
-          onShiftClick={singleShiftClick}
-        />
+        {!config.brushHide && (
+          <Brush
+            event={dragEvent}
+            width={env.innerWidth}
+            height={env.innerHeight}
+            onXBrushEnd={handleXBrushEnd}
+            onYBrushEnd={handleYBrushEnd}
+            onShiftClick={singleShiftClick}
+          />
+        )}
       </div>
     </div>
   )

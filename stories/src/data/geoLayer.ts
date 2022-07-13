@@ -35,11 +35,11 @@ export const geoTable = memoizeOne(
   }
 )
 
-const addTrack = (data, startLat: number, startLon: number) => {
+const addTrack = (data, startLat: number, startLon: number, iters: number) => {
   const tid = Math.floor(Math.random() * 1000)
   let lat = startLat,
     lon = startLon
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < iters; i++) {
     const time = now + i * 1000 * 60
     lat += Math.random() * 1.5
     lon += Math.random() * 1.5
@@ -48,10 +48,10 @@ const addTrack = (data, startLat: number, startLon: number) => {
 }
 
 export const geoTracks = memoizeOne(
-  (lon: number, lat: number, count = 1): Table => {
+  (lon: number, lat: number, iters: number, count = 1): Table => {
     const data = []
     for (let i = 0; i < count; i++) {
-      addTrack(data, lat - 4, lon - 6)
+      addTrack(data, lat - 4, lon - 6, iters)
     }
     return newTable(data.length)
       .addColumn(

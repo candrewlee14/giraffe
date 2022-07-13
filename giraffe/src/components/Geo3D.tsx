@@ -1,5 +1,12 @@
 // Libraries
-import React, {FunctionComponent, useEffect, useState} from 'react'
+import React, {
+  FunctionComponent,
+  useEffect,
+  useState,
+  useRef,
+  createRef,
+} from 'react'
+import {GlobeMethods} from 'react-globe.gl'
 import Globe from 'react-globe.gl'
 // import {Map, TileLayer} from 'react-leaflet'
 // import Control from 'react-leaflet-control'
@@ -37,13 +44,7 @@ const Geo3D: FunctionComponent<Props> = props => {
     width,
     zoom,
   } = props
-  const mapRef = React.createRef<any>()
-
-  useEffect(() => {
-    if (width && height) {
-      mapRef.current?.leafletElement._onResize()
-    }
-  }, [width, height])
+  const globeRef = React.useRef<GlobeMethods>()
 
   const {table, detectCoordinateFields} = props
   const [preprocessedTable, setPreprocessedTable] = useState(
@@ -69,6 +70,25 @@ const Geo3D: FunctionComponent<Props> = props => {
     setPreprocessedTable(newTable)
   }, [table, detectCoordinateFields])
 
+  useEffect(() => {
+    if (globeRef.current != null) {
+      ;(globeRef.current.controls() as Obj3).autoRotate = true
+      ;(globeRef.current.controls() as Obj3).autoRotateSpeed = 1.6
+      const latLon = preprocessedTable.getLatLon(0)
+      if (latLon != null) {
+        globeRef.current.pointOfView(
+          {lat: latLon?.lat, lng: latLon?.lon, altitude: 0.1},
+          500
+        )
+      }
+    }
+  }, [preprocessedTable])
+
+  type Obj3 = {
+    autoRotate: boolean
+    autoRotateSpeed: number
+  }
+
   if (width === 0 || height === 0) {
     return null
   }
@@ -80,24 +100,20 @@ const Geo3D: FunctionComponent<Props> = props => {
     }
   }
 
-  const latLon = preprocessedTable.getLatLon(0)
-  const mapCenter = {
-    lat: latLon ? latLon.lat : lat,
-    lon: latLon ? latLon.lon : lon,
-  }
-  var latsAndLngs = map([...Array(preprocessedTable.getRowCount()).keys()], i =>
-    preprocessedTable.getLatLon(i)
-  )
+  const tracks = preprocessedTable.mapTracks((track, _options, _index) => {
+    return track
+  }, null)
 
   return (
     <Globe
+      ref={globeRef}
       width={width}
       globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-      pathsData={latsAndLngs}
-      pathPointLat={coord => coord.lat}
-      pathPointLng={coord => coord.lon}
+      backgroundColor="rgba(0,0,0,0)"
+      pathsData={tracks}
       pathColor={() => ['rgba(0,0,255,0.6)', 'rgba(255,0,0,0.6)']}
+      pathStroke={3}
       pathDashLength={0.01}
       pathDashGap={0.004}
       pathDashAnimateTime={100000}

@@ -69,6 +69,7 @@ export interface Config {
   // When the `xDomain` option is not passed, then the
   // component is "uncontrolled". It will compute, set, and reset the `xDomain`
   // automatically.
+  brushHide?: boolean
   xDomain?: number[]
   includeXDomainZoom?: boolean
   onSetXDomain?: (xDomain: number[]) => void
