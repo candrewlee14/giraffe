@@ -35,14 +35,33 @@ export const geoTable = memoizeOne(
   }
 )
 
+interface Point {
+  lat: number
+  lon: number
+}
+
+const normalize = (pt: Point) => {
+  const norm = Math.sqrt(Math.pow(pt.lat, 2) + Math.pow(pt.lon, 2))
+  pt.lat /= norm
+  pt.lon /= norm
+  return pt
+}
+
 const addTrack = (data, startLat: number, startLon: number, iters: number) => {
   const tid = Math.floor(Math.random() * 1000)
   let lat = startLat,
     lon = startLon
+  let delta = {
+    lat: (Math.random() - 0.5) * 1.5,
+    lon: (Math.random() - 0.5) * 1.5,
+  }
   for (let i = 0; i < iters; i++) {
     const time = now + i * 1000 * 60
-    lat += Math.random() * 1.5
-    lon += Math.random() * 1.5
+    delta.lat += (Math.random() - 0.5) / 20
+    delta.lon += (Math.random() - 0.5) / 20
+    delta = normalize(delta)
+    lat += delta.lat
+    lon += delta.lon
     data.push({time, lat, lon, tid})
   }
 }

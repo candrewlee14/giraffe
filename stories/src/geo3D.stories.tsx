@@ -50,52 +50,66 @@ const genericKnobs = () => {
     max: 180,
     step: 1,
   })
-  const zoom = number('Zoom', 6, {
+  const pointCount = number('Step count', 30, {
     range: true,
-    min: 1,
-    max: 20,
+    min: 0,
+    max: 300,
     step: 1,
   })
-  const allowPanAndZoom = boolean('Allow pan and zoom', true)
-  const useS2CellID = boolean('Use S2 Cell ID', true)
+  // const zoom = number('Zoom', 6, {
+  //   range: true,
+  //   min: 1,
+  //   max: 20,
+  //   step: 1,
+  // })
+  // const allowPanAndZoom = boolean('Allow pan and zoom', true)
+  // const useS2CellID = boolean('Use S2 Cell ID', true)
 
-  return {allowPanAndZoom, latitude, longitude, zoom, useS2CellID}
+  return {latitude, longitude, pointCount}
 }
 
 const trackKnobs = () => {
-  const speed = number('Speed', 200, {
+  const dashTime = number('Dash time', 30_000, {
     range: true,
-    min: 1,
-    max: 10000,
-    step: 1,
+    min: 1_000,
+    max: 100_000,
+    step: 50,
   })
 
-  const trackWidth = number('Track width', 4, {
+  const dashWeight = number('Dash weight', 2, {
     range: true,
-    min: 1,
-    max: 15,
-    step: 1,
+    min: 0.1,
+    max: 10,
+    step: 0.1,
   })
-  const color1 = color('Track color 1', '#0000ff')
-  const color2 = color('Track color 2', '#f0f0ff')
-  const randomColors = boolean('Random colors', true)
 
-  const endStopMarkers = boolean('End stop markers', true)
-  const endStopMarkerRadius = number('End stop marker radius', 4, {
+  const dashLength = number('Dash length', 0.1, {
     range: true,
-    min: 1,
-    max: 100,
-    step: 1,
+    min: 0.01,
+    max: 0.5,
+    step: 0.01,
+  })
+
+  const dashGap = number('Dash gap', 0.01, {
+    range: true,
+    min: 0.01,
+    max: 0.5,
+    step: 0.01,
+  })
+
+  const spinSpeed = number('Spin speed', 0.6, {
+    range: true,
+    min: -10,
+    max: 10,
+    step: 0.1,
   })
 
   return {
-    speed,
-    trackWidth,
-    randomColors,
-    color1,
-    color2,
-    endStopMarkers,
-    endStopMarkerRadius,
+    spinSpeed,
+    dashTime,
+    dashWeight,
+    dashGap,
+    dashLength,
   }
 }
 
@@ -106,18 +120,10 @@ geo3D.add('Tracks', () => {
     max: 100,
     step: 1,
   })
-  const {allowPanAndZoom, latitude, longitude, zoom} = genericKnobs()
-  const {
-    speed,
-    trackWidth,
-    randomColors,
-    color1,
-    color2,
-    endStopMarkers,
-    endStopMarkerRadius,
-  } = trackKnobs()
+  const {latitude, longitude, pointCount} = genericKnobs()
+  const {spinSpeed, dashTime, dashWeight, dashGap, dashLength} = trackKnobs()
   const config: Config = {
-    table: geoTracks(-74, 40, 100, numberOfTracks),
+    table: geoTracks(longitude, latitude, pointCount, numberOfTracks),
     showAxes: false,
     layers: [
       {
@@ -125,24 +131,27 @@ geo3D.add('Tracks', () => {
         colors: colorSchemeKnob(),
         lat: latitude,
         lon: longitude,
-        zoom,
-        allowPanAndZoom,
+        dashTime,
+        dashWeight,
+        dashGap,
+        dashLength,
+        spinSpeed,
         detectCoordinateFields: false,
         layers: [
-          {
-            type: 'trackMap',
-            speed,
-            trackWidth,
-            randomColors,
-            endStopMarkers,
-            endStopMarkerRadius,
-            colors: randomColors
-              ? undefined
-              : [
-                  {type: 'min', hex: color1},
-                  {type: 'max', hex: color2},
-                ],
-          },
+          // {
+          //   type: 'trackMap',
+          //   speed,
+          //   trackWidth,
+          //   randomColors,
+          //   endStopMarkers,
+          //   endStopMarkerRadius,
+          //   colors: randomColors
+          //     ? undefined
+          //     : [
+          //         {type: 'min', hex: color1},
+          //         {type: 'max', hex: color2},
+          //       ],
+          // },
         ],
         tileServerConfiguration: osmTileServerConfiguration,
       },

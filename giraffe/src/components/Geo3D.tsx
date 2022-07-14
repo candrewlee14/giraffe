@@ -1,10 +1,5 @@
 // Libraries
-import React, {
-  FunctionComponent,
-  useEffect,
-  useState,
-  useRef,
-} from 'react'
+import React, {FunctionComponent, useEffect, useState, useRef} from 'react'
 import {GlobeMethods} from 'react-globe.gl'
 import Globe from 'react-globe.gl'
 // import {Map, TileLayer} from 'react-leaflet'
@@ -19,7 +14,7 @@ import {getRowLimit} from '../utils/geo'
 // Types
 import {Geo3DLayerConfig} from '../types/geo3D'
 import {Config, Table} from '../types'
-import { Track } from './geo/processing/GeoTable'
+import {Track} from './geo/processing/GeoTable'
 
 interface Props extends Partial<Geo3DLayerConfig> {
   width: number
@@ -30,18 +25,19 @@ interface Props extends Partial<Geo3DLayerConfig> {
 
 const Geo3D: FunctionComponent<Props> = props => {
   const {
-    allowPanAndZoom,
     height,
     lat,
     latLonColumns,
     lon,
     mapStyle,
-    s2Column,
     stylingConfig,
-    useS2CellID,
     width,
-    zoom,
     colors,
+    spinSpeed,
+    dashTime,
+    dashWeight,
+    dashGap,
+    dashLength,
   } = props
   const globeRef = useRef<GlobeMethods>()
 
@@ -51,9 +47,9 @@ const Geo3D: FunctionComponent<Props> = props => {
       ? preprocessData(
           table,
           getRowLimit(props.layers),
-          useS2CellID || !detectCoordinateFields,
+          !detectCoordinateFields,
           latLonColumns,
-          s2Column
+          null
         )
       : null
   )
@@ -62,17 +58,18 @@ const Geo3D: FunctionComponent<Props> = props => {
     const newTable = preprocessData(
       props.table,
       getRowLimit(props.layers),
-      useS2CellID || !detectCoordinateFields,
+      !detectCoordinateFields,
       latLonColumns,
-      s2Column
+      null
     )
     setPreprocessedTable(newTable)
   }, [table, detectCoordinateFields])
 
   useEffect(() => {
     if (globeRef.current != null) {
-      (globeRef.current.controls() as Obj3).autoRotate = true;
-      (globeRef.current.controls() as Obj3).autoRotateSpeed = 1.6;
+      ;(globeRef.current.controls() as Obj3).autoRotate =
+        spinSpeed != 0 ? true : false
+      ;(globeRef.current.controls() as Obj3).autoRotateSpeed = spinSpeed
       const latLon = preprocessedTable.getLatLon(0)
       if (latLon != null) {
         globeRef.current.pointOfView(
@@ -81,7 +78,7 @@ const Geo3D: FunctionComponent<Props> = props => {
         )
       }
     }
-  }, [preprocessedTable])
+  }, [preprocessedTable, spinSpeed])
 
   type Obj3 = {
     autoRotate: boolean
@@ -105,7 +102,7 @@ const Geo3D: FunctionComponent<Props> = props => {
   }
 
   const tracks = preprocessedTable.mapTracks((track, _options, index) => {
-    const path : Path = {
+    const path: Path = {
       track: track,
       pathIndex: index,
     }
@@ -121,16 +118,17 @@ const Geo3D: FunctionComponent<Props> = props => {
       backgroundColor="rgba(0,0,0,0)"
       pathsData={tracks}
       pathPoints={path => (path as Path).track}
-      // pathPointLat={pt => pt.lat}
-      // pathPointLng={pt => pt.lng}
       pathColor={path =>
-        colors ? colors[((path.pathIndex % colors.length) + colors.length) % colors.length] : ['rgba(0,0,255,0.6)', 'rgba(255,0,0,0.6)']
+        colors
+          ? colors[
+              ((path.pathIndex % colors.length) + colors.length) % colors.length
+            ]
+          : ['rgba(0,0,255,0.6)', 'rgba(255,0,0,0.6)']
       }
-      pathStroke={3}
-      pathDashLength={0.01}
-      pathDashGap={0.004}
-      pathDashAnimateTime={30_000}
-      // pathPointAlt={rise ? pnt => pnt[2] : undefined}
+      pathStroke={dashWeight}
+      pathDashLength={dashLength}
+      pathDashGap={dashGap}
+      pathDashAnimateTime={dashTime}
       pathTransitionDuration={500}
     />
   )

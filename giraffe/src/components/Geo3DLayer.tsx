@@ -29,8 +29,8 @@ const onViewportChange = (
   lastRenderProperties: LastRenderProperties
 ) => (lat: number, lon: number, zoom: number) => {
   const {config} = props
-  const {allowPanAndZoom, onUpdateViewport} = config
-  if (allowPanAndZoom && onUpdateViewport) {
+  const {onUpdateViewport} = config
+  if (onUpdateViewport) {
     onUpdateViewport(lat, lon, zoom)
   }
   const {widthOnLastRender, heightOnLastRender} = lastRenderProperties
@@ -98,11 +98,14 @@ const onAutoResize = (
     layers,
     lat,
     lon,
-    zoom,
-    allowPanAndZoom,
     detectCoordinateFields,
     mapStyle,
     colors,
+    spinSpeed,
+    dashTime,
+    dashWeight,
+    dashGap,
+    dashLength,
   } = config
   const {
     latOnLastRender,
@@ -117,7 +120,7 @@ const onAutoResize = (
     height,
     latOnLastRender === null ? lat : latOnLastRender,
     lonOnLastRender === null ? lon : lonOnLastRender,
-    zoomOnLastRender === null ? zoom : zoomOnLastRender
+    zoomOnLastRender
   )
 
   return (
@@ -128,17 +131,18 @@ const onAutoResize = (
         table={table}
         lat={lat}
         lon={lon}
-        zoom={zoom}
+        spinSpeed={spinSpeed}
+        dashTime={dashTime}
+        dashWeight={dashWeight}
+        dashGap={dashGap}
+        dashLength={dashLength}
         colors={colors}
         mapStyle={mapStyle}
         detectCoordinateFields={detectCoordinateFields}
         layers={layers}
         stylingConfig={plotConfig}
         onViewportChange={onViewportChange(props, lastRenderProperties)}
-        allowPanAndZoom={allowPanAndZoom}
         tileServerConfiguration={config.tileServerConfiguration}
-        useS2CellID={config.useS2CellID}
-        s2Column={config.s2Column}
         latLonColumns={config.latLonColumns}
       />
     </div>

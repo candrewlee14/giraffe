@@ -2,12 +2,17 @@ export interface Geo3DLayerConfig {
   type: 'geo3D'
   lat: number
   lon: number
-  zoom: number
-  allowPanAndZoom: boolean
+  // zoom: number
+  spinSpeed: number
+  dashTime: number
+  dashGap: number
+  dashLength: number
+  dashWeight: number
+  // allowPanAndZoom: boolean
   mapStyle?: string
   detectCoordinateFields: boolean
-  useS2CellID?: boolean
-  s2Column?: string
+  // useS2CellID?: boolean
+  // s2Column?: string
   colors?: string[]
   latLonColumns?: LatLonColumns
 
