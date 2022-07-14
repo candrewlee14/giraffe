@@ -80,7 +80,7 @@ const Geo3D: FunctionComponent<Props> = props => {
       const latLon = preprocessedTable.getLatLon(0)
       if (latLon != null) {
         globeRef.current.pointOfView(
-          {lat: latLon.lat, lng: latLon.lon, altitude: 0.1},
+          {lat: latLon.lat, lng: latLon.lon, altitude: 2.2},
           500
         )
       }
@@ -121,6 +121,7 @@ const Geo3D: FunctionComponent<Props> = props => {
       ref={globeRef}
       enablePointerInteraction={hoverInteraction}
       width={width}
+      height={height}
       globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
       backgroundColor="rgba(0,0,0,0)"

@@ -138,14 +138,15 @@ geo3D.add('Tracks', () => {
     max: 20,
     step: 0.05,
   })
+  const table = geoTracks(
+    longitude,
+    latitude,
+    pointCount,
+    numberOfTracks,
+    pathChaos
+  );
   const config: Config = {
-    table: geoTracks(
-      longitude,
-      latitude,
-      pointCount,
-      numberOfTracks,
-      pathChaos
-    ),
+    table,
     showAxes: false,
     layers: [
       {
