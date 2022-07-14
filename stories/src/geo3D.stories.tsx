@@ -106,13 +106,6 @@ const trackKnobs = () => {
 
   const enableHover = boolean('Enable hover tooltip', true)
 
-  const pathChaos = number('Path chaos', 0.5, {
-    range: true,
-    min: 0.05,
-    max: 20,
-    step: 0.05,
-  })
-
   return {
     spinSpeed,
     dashTime,
@@ -120,7 +113,6 @@ const trackKnobs = () => {
     dashGap,
     dashLength,
     enableHover,
-    pathChaos
   }
 }
 
@@ -139,10 +131,21 @@ geo3D.add('Tracks', () => {
     dashGap,
     dashLength,
     enableHover,
-    pathChaos,
   } = trackKnobs()
+  const pathChaos = number('Path chaos', 0.5, {
+    range: true,
+    min: 0.05,
+    max: 20,
+    step: 0.05,
+  })
   const config: Config = {
-    table: geoTracks(longitude, latitude, pointCount, numberOfTracks, pathChaos),
+    table: geoTracks(
+      longitude,
+      latitude,
+      pointCount,
+      numberOfTracks,
+      pathChaos
+    ),
     showAxes: false,
     layers: [
       {
@@ -150,6 +153,62 @@ geo3D.add('Tracks', () => {
         colors: colorSchemeKnob(),
         lat: latitude,
         lon: longitude,
+        hoverInteraction: enableHover,
+        dashTime,
+        dashWeight,
+        dashGap,
+        dashLength,
+        spinSpeed,
+        detectCoordinateFields: false,
+        layers: [
+          // {
+          //   type: 'trackMap',
+          //   speed,
+          //   trackWidth,
+          //   randomColors,
+          //   endStopMarkers,
+          //   endStopMarkerRadius,
+          //   colors: randomColors
+          //     ? undefined
+          //     : [
+          //         {type: 'min', hex: color1},
+          //         {type: 'max', hex: color2},
+          //       ],
+          // },
+        ],
+        tileServerConfiguration: osmTileServerConfiguration,
+      },
+    ],
+  }
+  return (
+    <PlotContainer>
+      <Plot config={config} />
+    </PlotContainer>
+  )
+})
+
+geo3D.add('Tracks with Custom CSV', () => {
+  const csv = text('Paste CSV here:', '')
+  let table = fromFlux(csv).table
+
+  // const {latitude, longitude, pointCount} = genericKnobs()
+  const {
+    spinSpeed,
+    dashTime,
+    dashWeight,
+    dashGap,
+    dashLength,
+    enableHover,
+  } = trackKnobs()
+  const config: Config = {
+    table,
+    showAxes: false,
+    layers: [
+      {
+        type: 'geo3D',
+        colors: colorSchemeKnob(),
+        lat: null,
+        lon: null,
         hoverInteraction: enableHover,
         dashTime,
         dashWeight,

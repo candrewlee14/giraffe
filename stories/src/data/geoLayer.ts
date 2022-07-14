@@ -47,7 +47,13 @@ const normalize = (pt: Point) => {
   return pt
 }
 
-const addTrack = (data, startLat: number, startLon: number, iters: number, chaos: number) => {
+const addTrack = (
+  data,
+  startLat: number,
+  startLon: number,
+  iters: number,
+  chaos: number
+) => {
   const tid = Math.floor(Math.random() * 1000)
   let lat = startLat,
     lon = startLon
@@ -67,7 +73,13 @@ const addTrack = (data, startLat: number, startLon: number, iters: number, chaos
 }
 
 export const geoTracks = memoizeOne(
-  (lon: number, lat: number, iters: number, count = 1, chaos: number = 0.4): Table => {
+  (
+    lon: number,
+    lat: number,
+    iters: number,
+    count = 1,
+    chaos: number = 0.4
+  ): Table => {
     const data = []
     for (let i = 0; i < count; i++) {
       addTrack(data, lat - 4, lon - 6, iters, chaos)
