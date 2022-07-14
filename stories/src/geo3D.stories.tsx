@@ -97,11 +97,20 @@ const trackKnobs = () => {
     step: 0.01,
   })
 
-  const spinSpeed = number('Spin speed', 0.6, {
+  const spinSpeed = number('Spin speed', 0.5, {
     range: true,
     min: -10,
     max: 10,
-    step: 0.1,
+    step: 0.5,
+  })
+
+  const enableHover = boolean('Enable hover tooltip', true)
+
+  const pathChaos = number('Path chaos', 0.5, {
+    range: true,
+    min: 0.05,
+    max: 20,
+    step: 0.05,
   })
 
   return {
@@ -110,6 +119,8 @@ const trackKnobs = () => {
     dashWeight,
     dashGap,
     dashLength,
+    enableHover,
+    pathChaos
   }
 }
 
@@ -121,9 +132,17 @@ geo3D.add('Tracks', () => {
     step: 1,
   })
   const {latitude, longitude, pointCount} = genericKnobs()
-  const {spinSpeed, dashTime, dashWeight, dashGap, dashLength} = trackKnobs()
+  const {
+    spinSpeed,
+    dashTime,
+    dashWeight,
+    dashGap,
+    dashLength,
+    enableHover,
+    pathChaos,
+  } = trackKnobs()
   const config: Config = {
-    table: geoTracks(longitude, latitude, pointCount, numberOfTracks),
+    table: geoTracks(longitude, latitude, pointCount, numberOfTracks, pathChaos),
     showAxes: false,
     layers: [
       {
@@ -131,6 +150,7 @@ geo3D.add('Tracks', () => {
         colors: colorSchemeKnob(),
         lat: latitude,
         lon: longitude,
+        hoverInteraction: enableHover,
         dashTime,
         dashWeight,
         dashGap,

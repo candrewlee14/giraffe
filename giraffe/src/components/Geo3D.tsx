@@ -1,5 +1,6 @@
 // Libraries
 import React, {FunctionComponent, useEffect, useState, useRef} from 'react'
+import {renderToString} from 'react-dom/server'
 import {GlobeMethods} from 'react-globe.gl'
 import Globe from 'react-globe.gl'
 // import {Map, TileLayer} from 'react-leaflet'
@@ -9,18 +10,22 @@ import Globe from 'react-globe.gl'
 
 // Utils
 import {preprocessData} from './geo/processing/tableProcessing'
+import {GeoTooltip} from './geo/GeoTooltip'
 import {getRowLimit} from '../utils/geo'
+import {Tooltip} from './Tooltip'
 
 // Types
 import {Geo3DLayerConfig} from '../types/geo3D'
-import {Config, Table} from '../types'
+import {Config, LegendData, Table} from '../types'
 import {Track} from './geo/processing/GeoTable'
+import {getLegendData} from '../utils/legend/staticLegend'
 
 interface Props extends Partial<Geo3DLayerConfig> {
   width: number
   height: number
   table: Table
   stylingConfig: Partial<Config>
+  plotConfig: Config
 }
 
 const Geo3D: FunctionComponent<Props> = props => {
@@ -31,6 +36,7 @@ const Geo3D: FunctionComponent<Props> = props => {
     lon,
     mapStyle,
     stylingConfig,
+    hoverInteraction,
     width,
     colors,
     spinSpeed,
@@ -38,6 +44,7 @@ const Geo3D: FunctionComponent<Props> = props => {
     dashWeight,
     dashGap,
     dashLength,
+    plotConfig,
   } = props
   const globeRef = useRef<GlobeMethods>()
 
@@ -112,6 +119,7 @@ const Geo3D: FunctionComponent<Props> = props => {
   return (
     <Globe
       ref={globeRef}
+      enablePointerInteraction={hoverInteraction}
       width={width}
       globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
@@ -130,6 +138,10 @@ const Geo3D: FunctionComponent<Props> = props => {
       pathDashGap={dashGap}
       pathDashAnimateTime={dashTime}
       pathTransitionDuration={500}
+      pathLabel={p => {
+        let path = p as Path
+        return '<div>' + path.pathIndex.toString() + '</div>'
+      }}
     />
   )
 }

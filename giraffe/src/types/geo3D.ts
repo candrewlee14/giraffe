@@ -5,6 +5,7 @@ export interface Geo3DLayerConfig {
   // zoom: number
   spinSpeed: number
   dashTime: number
+  hoverInteraction: boolean
   dashGap: number
   dashLength: number
   dashWeight: number
