@@ -107,6 +107,7 @@ const onAutoResize = (
     dashGap,
     dashLength,
     hoverInteraction,
+    coloredEarth,
   } = config
   const {
     latOnLastRender,
@@ -132,6 +133,7 @@ const onAutoResize = (
         table={table}
         lat={lat}
         lon={lon}
+        coloredEarth={coloredEarth}
         hoverInteraction={hoverInteraction}
         spinSpeed={spinSpeed}
         dashTime={dashTime}

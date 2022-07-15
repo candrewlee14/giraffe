@@ -3,6 +3,7 @@ export interface Geo3DLayerConfig {
   lat: number
   lon: number
   // zoom: number
+  coloredEarth?: boolean
   spinSpeed: number
   dashTime: number
   hoverInteraction: boolean

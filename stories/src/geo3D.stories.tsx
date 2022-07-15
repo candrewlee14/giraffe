@@ -106,6 +106,8 @@ const trackKnobs = () => {
 
   const enableHover = boolean('Enable hover tooltip', true)
 
+  const coloredEarth = boolean('Colored Earth image', false)
+
   return {
     spinSpeed,
     dashTime,
@@ -113,6 +115,7 @@ const trackKnobs = () => {
     dashGap,
     dashLength,
     enableHover,
+    coloredEarth,
   }
 }
 
@@ -130,6 +133,7 @@ geo3D.add('Tracks', () => {
     dashWeight,
     dashGap,
     dashLength,
+    coloredEarth,
     enableHover,
   } = trackKnobs()
   const pathChaos = number('Path chaos', 0.5, {
@@ -144,7 +148,7 @@ geo3D.add('Tracks', () => {
     pointCount,
     numberOfTracks,
     pathChaos
-  );
+  )
   const config: Config = {
     table,
     showAxes: false,
@@ -155,6 +159,7 @@ geo3D.add('Tracks', () => {
         lat: latitude,
         lon: longitude,
         hoverInteraction: enableHover,
+        coloredEarth,
         dashTime,
         dashWeight,
         dashGap,
@@ -197,6 +202,7 @@ geo3D.add('Tracks with Custom CSV', () => {
     spinSpeed,
     dashTime,
     dashWeight,
+    coloredEarth,
     dashGap,
     dashLength,
     enableHover,
@@ -212,6 +218,7 @@ geo3D.add('Tracks with Custom CSV', () => {
         lon: null,
         hoverInteraction: enableHover,
         dashTime,
+        coloredEarth,
         dashWeight,
         dashGap,
         dashLength,

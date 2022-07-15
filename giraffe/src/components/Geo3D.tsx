@@ -45,6 +45,7 @@ const Geo3D: FunctionComponent<Props> = props => {
     dashGap,
     dashLength,
     plotConfig,
+    coloredEarth,
   } = props
   const globeRef = useRef<GlobeMethods>()
 
@@ -122,7 +123,11 @@ const Geo3D: FunctionComponent<Props> = props => {
       enablePointerInteraction={hoverInteraction}
       width={width}
       height={height}
-      globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+      globeImageUrl={
+        coloredEarth
+          ? 'https://unpkg.com/three-globe@2.24.6/example/img/earth-blue-marble.jpg'
+          : '//unpkg.com/three-globe/example/img/earth-dark.jpg'
+      }
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
       backgroundColor="rgba(0,0,0,0)"
       pathsData={tracks}
